@@ -16,6 +16,7 @@
 		4D0C3FFB26DE780900BD39AE /* cup.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4D0C3FF726DE780900BD39AE /* cup.scn */; };
 		4D0C3FFD26DE780900BD39AE /* vase.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4D0C3FF926DE780900BD39AE /* vase.scn */; };
 		4D0C400626DE81B200BD39AE /* boxing.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4D0C400526DE81B200BD39AE /* boxing.scn */; };
+		4D7948BE26DEAC770047BEFF /* table.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4D7948BD26DEAC770047BEFF /* table.scn */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,8 +30,8 @@
 		4D0C3FEF26DE70C600BD39AE /* itemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = itemCell.swift; sourceTree = "<group>"; };
 		4D0C3FF726DE780900BD39AE /* cup.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = cup.scn; sourceTree = "<group>"; };
 		4D0C3FF926DE780900BD39AE /* vase.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = vase.scn; sourceTree = "<group>"; };
-		4D0C400426DE819600BD39AE /* table.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = table.scn; sourceTree = "<group>"; };
 		4D0C400526DE81B200BD39AE /* boxing.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = boxing.scn; sourceTree = "<group>"; };
+		4D7948BD26DEAC770047BEFF /* table.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = table.scn; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,9 +65,9 @@
 			isa = PBXGroup;
 			children = (
 				4D0C3FF926DE780900BD39AE /* vase.scn */,
+				4D7948BD26DEAC770047BEFF /* table.scn */,
 				4D0C3FF726DE780900BD39AE /* cup.scn */,
 				4D0C400526DE81B200BD39AE /* boxing.scn */,
-				4D0C400426DE819600BD39AE /* table.scn */,
 				4D0C3FDB26DE6E1700BD39AE /* AppDelegate.swift */,
 				4D0C3FDF26DE6E1700BD39AE /* ViewController.swift */,
 				4D0C3FE126DE6E1700BD39AE /* Main.storyboard */,
@@ -138,6 +139,7 @@
 				4D0C3FE826DE6E1800BD39AE /* LaunchScreen.storyboard in Resources */,
 				4D0C3FFD26DE780900BD39AE /* vase.scn in Resources */,
 				4D0C3FE526DE6E1800BD39AE /* Assets.xcassets in Resources */,
+				4D7948BE26DEAC770047BEFF /* table.scn in Resources */,
 				4D0C400626DE81B200BD39AE /* boxing.scn in Resources */,
 				4D0C3FE326DE6E1700BD39AE /* Main.storyboard in Resources */,
 				4D0C3FFB26DE780900BD39AE /* cup.scn in Resources */,

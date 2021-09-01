@@ -10,17 +10,17 @@ import SceneKit
 import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
-    let itemsArray = ["cup","vase","boxing","table"]
+    let itemsArray = ["table","cup","vase","boxing"]
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var itemsCollectionView: UICollectionView!
     var selectedItem: String?
     override func viewDidLoad() {
         super.viewDidLoad()
         sceneView.delegate = self
-        sceneView.debugOptions = [.showFeaturePoints]
         itemsCollectionView.delegate = self
         itemsCollectionView.dataSource = self
-        
+        sceneView.autoenablesDefaultLighting = true
+        registerGestureRecognizers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -34,32 +34,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, UICollectionViewDataS
         super.viewWillDisappear(animated)
         sceneView.session.pause()
     }
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return itemsArray.count
-    }
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let touchLocation = touches.first?.location(in: sceneView) {
-            let hitTest = sceneView.hitTest(touchLocation, types: .existingPlaneUsingExtent)
-            if !hitTest.isEmpty {
-                if let hitTestResult = hitTest.first {
-                    addItem(hitTestResult: hitTestResult)
-                }
-            }
-        }
-    }
+    
     func addItem(hitTestResult: ARHitTestResult) {
         if let selectedItemResult = selectedItem {
-            print("\(selectedItemResult) -> u sceneItem")
             let sceneItem = SCNScene(named: "\(selectedItemResult).scn")
             if let nodeItem = sceneItem?.rootNode.childNode(withName: selectedItemResult, recursively: false) {
                 let transform = hitTestResult.worldTransform.columns.3
                 nodeItem.position = SCNVector3(transform.x,
-                                                transform.y,
-                                                transform.z)
+                                               transform.y,
+                                               transform.z)
                 sceneView.scene.rootNode.addChildNode(nodeItem)
             }
         }
     }
+    
+    //MARK: - CollectionView
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return itemsArray.count
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ItemCell", for: indexPath) as! itemCell
         cell.itemLabel.text = itemsArray[indexPath.item]
@@ -68,11 +62,61 @@ class ViewController: UIViewController, ARSCNViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
         selectedItem = itemsArray[indexPath.item]
-        print(itemsArray[indexPath.item])
         cell?.backgroundColor = UIColor.green
     }
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
         cell?.backgroundColor = UIColor.orange
+    }
+    
+    //MARK: - GestureRecongizers
+    
+    func registerGestureRecognizers() {
+        let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self,
+                                                              action: #selector(pinch))
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self,
+                                                                      action: #selector(rotate))
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self,
+                                                          action: #selector(tapped))
+        sceneView.addGestureRecognizer(tapGestureRecognizer)
+        longPressGestureRecognizer.minimumPressDuration = 0.1
+        sceneView.addGestureRecognizer(pinchGestureRecognizer)
+        sceneView.addGestureRecognizer(longPressGestureRecognizer)
+    }
+    
+    @objc func tapped(sender: UITapGestureRecognizer) {
+        let sceneViewTapped = sender.view as! ARSCNView
+        let tapLocation = sender.location(in: sceneViewTapped)
+        let hitTest = sceneViewTapped.hitTest(tapLocation, types: .existingPlaneUsingExtent)
+        if !hitTest.isEmpty {
+            self.addItem(hitTestResult: hitTest.first!)
+        }
+    }
+    
+    @objc func pinch(sender: UIPinchGestureRecognizer) {
+        let sceneViewPinch = sender.view as! ARSCNView
+        let pinchLocation = sender.location(in: sceneViewPinch)
+        let hitTest = sceneViewPinch.hitTest(pinchLocation)
+        if !hitTest.isEmpty {
+            let node = hitTest.first?.node
+            let pinchAction = SCNAction.scale(by: sender.scale, duration: 0)
+            node?.runAction(pinchAction)
+            sender.scale = 1.0
+        }
+    }
+    @objc func rotate(sender: UILongPressGestureRecognizer) {
+        let sceneViewRotate = sender.view as! ARSCNView
+        let holdLocation = sender.location(in: sceneViewRotate)
+        let hitTest = sceneViewRotate.hitTest(holdLocation)
+        if !hitTest.isEmpty {
+            let node = hitTest.first?.node
+            if sender.state == .began {
+                let action = SCNAction.rotateBy(x: 0, y: .pi * 2, z: 0, duration: 1)
+                let foreverAction = SCNAction.repeatForever(action)
+                node?.runAction(foreverAction)
+            } else if sender.state == .ended {
+                node?.removeAllActions()
+            }
+        }
     }
 }
